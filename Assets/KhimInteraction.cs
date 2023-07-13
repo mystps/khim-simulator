@@ -26,11 +26,20 @@ public class KhimInteraction : MonoBehaviour
                     {
                         int audioIndex = noteIndex - 1;
 
-                        if (lastAudioSource == audioSource && audioSource.isPlaying)
+                        if (lastAudioSource == audioSource)
                         {
-                            audioSource.Stop();
-                            lastAudioSource = null;
-                            Debug.Log("Stopped audio");
+                            if (audioSource.isPlaying)
+                            {
+                                audioSource.Stop();
+                                audioSource.Play();
+                                Debug.Log("Restarted audio");
+                            }
+                            else
+                            {
+                                audioSource.clip = sounds[audioIndex];
+                                audioSource.Play();
+                                Debug.Log("Played audio");
+                            }
                         }
                         else
                         {
@@ -38,7 +47,7 @@ public class KhimInteraction : MonoBehaviour
                             audioSource.Play();
                             Debug.Log("Played audio");
 
-                            if (lastAudioSource != null && lastAudioSource != audioSource && lastAudioSource.isPlaying)
+                            if (lastAudioSource != null && lastAudioSource.isPlaying)
                             {
                                 lastAudioSource.Stop();
                                 Debug.Log("Stopped previous audio");
