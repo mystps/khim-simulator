@@ -1,0 +1,51 @@
+# Unity specific
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+
+# Visual Studio / Visual Studio Code specific
+*.sln
+*.csproj
+*.suo
+*.sln.DotSettings.user
+*.suo.DotSettings.user
+*.userprefs
+.vs/
+.vscode/
+
+# macOS specific
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Unity generated files
+/*.pidb
+/*.svd
+/*.pdb
+/*.mdb
+/*.opendb
+
+# Android specific
+/*/build/
+/*/local.properties
+/*/proguard/
+/*/project.properties
+/*/project/
+/*/gradle/
+/build/
+/*.apk
+
+# iOS specific
+/Unity-iPhone.xcodeproj/
+/Unity-iPhone.xcworkspace/
+
+# Package-specific
+/packages/
+
+# Exclude specific file types
+# Example: Exclude all .txt files
+# *.txt
