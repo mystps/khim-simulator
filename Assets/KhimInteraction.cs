@@ -26,29 +26,23 @@ public class KhimInteraction : MonoBehaviour
                     {
                         int audioIndex = noteIndex - 1;
 
-                        if (lastAudioSource == audioSource)
+                        if (lastAudioSource == audioSource && audioSource.isPlaying)
                         {
-                            if (audioSource.isPlaying)
-                            {
-                                audioSource.Stop();
-                                audioSource.Play();
-                                Debug.Log("Restarted audio");
-                            }
-                            else
-                            {
-                                audioSource.clip = sounds[audioIndex];
-                                audioSource.Play();
-                                Debug.Log("Played audio");
-                            }
+                            // If the same note is tapped again and it's already playing, restart the audio
+                            audioSource.Stop();
+                            audioSource.Play();
+                            Debug.Log("Restarted audio");
                         }
                         else
                         {
+                            // If a different note is tapped or the same note is tapped while it's not playing, play the audio
                             audioSource.clip = sounds[audioIndex];
                             audioSource.Play();
                             Debug.Log("Played audio");
 
-                            if (lastAudioSource != null && lastAudioSource.isPlaying)
+                            if (lastAudioSource != null && lastAudioSource != audioSource && lastAudioSource.isPlaying)
                             {
+                                // Stop the previous audio source if it's different
                                 lastAudioSource.Stop();
                                 Debug.Log("Stopped previous audio");
                             }
