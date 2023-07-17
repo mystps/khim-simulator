@@ -4,7 +4,19 @@ public class KhimInteraction : MonoBehaviour
 {
     public AudioClip[] sounds; // Array to hold the audio clips for each note
 
-    private AudioSource lastAudioSource; // Track the last played audio source
+    private AudioSource[] audioSources; // Array to hold the audio sources for each note
+
+    void Start()
+    {
+        audioSources = new AudioSource[sounds.Length];
+
+        for (int i = 0; i < sounds.Length; i++)
+        {
+            GameObject noteObject = GameObject.Find("Note" + (i + 1));
+            AudioSource audioSource = noteObject.GetComponent<AudioSource>();
+            audioSources[i] = audioSource;
+        }
+    }
 
     void Update()
     {
@@ -18,38 +30,26 @@ public class KhimInteraction : MonoBehaviour
                 if (hit.collider != null && hit.collider.CompareTag("Note"))
                 {
                     GameObject noteObject = hit.collider.gameObject;
-                    int noteIndex = int.Parse(noteObject.name.Substring(4));
+                    int noteIndex = int.Parse(noteObject.name.Substring(4)) - 1;
 
-                    if (noteIndex >= 1 && noteIndex <= sounds.Length)
+                    if (noteIndex >= 0 && noteIndex < sounds.Length)
                     {
-                        AudioSource audioSource = noteObject.GetComponent<AudioSource>();
+                        AudioSource audioSource = audioSources[noteIndex];
 
                         if (audioSource != null && audioSource.clip != null)
                         {
-                            int audioIndex = noteIndex - 1;
-
-                            if (lastAudioSource == audioSource && audioSource.isPlaying)
+                            if (!audioSource.isPlaying)
                             {
-                                // If the same note is tapped again and it's already playing, restart the audio
-                                audioSource.Stop();
+                                // Play the audio if it's not already playing
+                                audioSource.clip = sounds[noteIndex];
                                 audioSource.Play();
-                                Debug.Log("Restarted audio");
+                                Debug.Log("Played audio: " + noteIndex);
                             }
                             else
                             {
-                                // If a different note is tapped or the same note is tapped while it's not playing, play the audio
-                                audioSource.clip = sounds[audioIndex];
-                                audioSource.Play();
-                                Debug.Log("Played audio");
-
-                                if (lastAudioSource != null && lastAudioSource != audioSource && lastAudioSource.isPlaying)
-                                {
-                                    // Stop the previous audio source if it's different
-                                    lastAudioSource.Stop();
-                                    Debug.Log("Stopped previous audio");
-                                }
-
-                                lastAudioSource = audioSource;
+                                // Stop the audio if it's already playing
+                                audioSource.Stop();
+                                Debug.Log("Stopped audio: " + noteIndex);
                             }
                         }
                     }
