@@ -15,33 +15,35 @@ public class KhimInteraction : MonoBehaviour
             GameObject noteObject = GameObject.Find("Note" + (i + 1));
             AudioSource audioSource = noteObject.GetComponent<AudioSource>();
             audioSources[i] = audioSource;
+
+            // Preload and cache the audio clip
+            audioSource.clip = sounds[i];
+            audioSource.playOnAwake = false;
+            audioSource.loop = false;
         }
     }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) || Input.touchCount > 0)
         {
-            Vector3 clickPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D[] hits = Physics2D.RaycastAll(clickPosition, Vector2.zero);
+            Vector3 inputPosition = Input.touchCount > 0 ? Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position) : Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            RaycastHit2D hit = Physics2D.Raycast(inputPosition, Vector2.zero);
 
-            foreach (RaycastHit2D hit in hits)
+            if (hit.collider != null && hit.collider.CompareTag("Note"))
             {
-                if (hit.collider != null && hit.collider.CompareTag("Note"))
+                GameObject noteObject = hit.collider.gameObject;
+                int noteIndex = int.Parse(noteObject.name.Substring(4)) - 1;
+
+                if (noteIndex >= 0 && noteIndex < sounds.Length)
                 {
-                    GameObject noteObject = hit.collider.gameObject;
-                    int noteIndex = int.Parse(noteObject.name.Substring(4)) - 1;
+                    AudioSource audioSource = audioSources[noteIndex];
 
-                    if (noteIndex >= 0 && noteIndex < sounds.Length)
+                    if (audioSource != null && audioSource.clip != null)
                     {
-                        AudioSource audioSource = audioSources[noteIndex];
-
-                        if (audioSource != null && audioSource.clip != null)
-                        {
-                            audioSource.clip = sounds[noteIndex];
-                            audioSource.Play();
-                            Debug.Log("Played audio: " + noteIndex);
-                        }
+                        audioSource.clip = sounds[noteIndex];
+                        audioSource.Play();
+                        Debug.Log("Played audio: " + noteIndex);
                     }
                 }
             }
