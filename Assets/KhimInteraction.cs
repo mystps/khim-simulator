@@ -38,19 +38,9 @@ public class KhimInteraction : MonoBehaviour
 
                         if (audioSource != null && audioSource.clip != null)
                         {
-                            if (!audioSource.isPlaying)
-                            {
-                                // Play the audio if it's not already playing
-                                audioSource.clip = sounds[noteIndex];
-                                audioSource.Play();
-                                Debug.Log("Played audio: " + noteIndex);
-                            }
-                            else
-                            {
-                                // Stop the audio if it's already playing
-                                audioSource.Stop();
-                                Debug.Log("Stopped audio: " + noteIndex);
-                            }
+                            audioSource.clip = sounds[noteIndex];
+                            audioSource.Play();
+                            Debug.Log("Played audio: " + noteIndex);
                         }
                     }
                 }
